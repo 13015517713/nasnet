@@ -45,9 +45,9 @@ class RandomSearch(object):
         for arch_epoch in range(self.arch_epochs):
             results_queue = Queue()
             processes = []
-
+            # 开这么多进程干嘛？
             for episode in range(self.episodes):
-                actions_index = self.random_sample()
+                actions_index = self.random_sample()  # 随机生成操作
 
                 if episode < self.episodes // 3:
                     worker = Worker(None, None, actions_index, self.args, 'cuda:0')
@@ -68,7 +68,7 @@ class RandomSearch(object):
                 worker = results_queue.get()
                 workers.append(worker)
 
-            # sort worker retain top20
+            # sort worker retrain top20
             workers_total = workers_top20 + workers
             workers_total.sort(key=lambda worker: worker.acc, reverse=True)
             workers_top20 = workers_total[:20]
