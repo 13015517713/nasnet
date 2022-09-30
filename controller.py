@@ -49,7 +49,7 @@ class Controller(nn.Module):
             for node in range(self.steps):
                 #node1
                 h_t, c_t, logits = self.forward(input, h_t, c_t, self.node_decoders[node])
-                action_index = Categorical(logits=logits).sample()
+                action_index = Categorical(logits=logits).sample() # 按照概率去采样
                 p = F.softmax(logits, dim=-1)[0,action_index]
                 log_p =F.log_softmax(logits, dim=-1)[0,action_index]
                 actions_p.append(p.detach())

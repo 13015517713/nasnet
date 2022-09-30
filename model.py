@@ -15,9 +15,9 @@ class Cell(nn.Module):
             self.preprocess0 = ReLUConvBN(C_prev_prev, C, 1, 1, 0)
         self.preprocess1 = ReLUConvBN(C_prev, C, 1, 1, 0)
 
-        if reduction:
+        if reduction: # 这个？
             self.geno = genotype.reduce
-            self.concat = genotype.reduce_concat
+            self.concat = genotype.reduce_concat  # 我还是不理解这个想干嘛
         else:
             self.geno = genotype.normal
             self.concat = genotype.normal_concat
@@ -25,7 +25,7 @@ class Cell(nn.Module):
 
         self.multiplier = len(self.concat)
 
-    def compiler(self, C, reduction):
+    def compiler(self, C, reduction): # 输入的channel和是否reduction
         self.nodes = []
         self.ops = nn.ModuleList()
         self.combs = nn.ModuleList()
@@ -71,12 +71,12 @@ class Cell(nn.Module):
                 s = comb(s)
             states += [s]
 
-        return torch.cat([states[i] for i in self.concat], dim=1)
+        return torch.cat([states[i] for i in self.concat], dim=1) # concat没有被选中的几个
 
 class Network(nn.Module):
     def __init__(self, genotype, num_classes=10, C=4, stem_multiplier=2, layers=4):
         super(Network, self).__init__()
-
+        # genotype 这个怎么转换成模型，可以看看。
         C_curr = stem_multiplier * C
         self.stem = nn.Sequential(
             nn.Conv2d(1, C_curr, 3, padding=1, bias=False),
@@ -94,7 +94,7 @@ class Network(nn.Module):
                 reduction = False
             cell = Cell(genotype, C_prev_prev, C_prev, C_curr, reduction, reduction_prev)
             reduction_prev = reduction
-            self.cells += [cell]
+            self.cells += [cell] # 没有被选到的都concat在一起
             C_prev_prev, C_prev = C_prev, cell.multiplier * C_curr
 
         self.global_pooling = nn.AdaptiveAvgPool2d(1)

@@ -29,7 +29,7 @@ parser.add_argument('--init_channel', type=int, default=4)
 #architecture
 parser.add_argument('--arch_epochs', type=int, default=100)
 parser.add_argument('--arch_lr', type=float, default=3.5e-4)
-parser.add_argument('--episodes', type=int, default=2)
+parser.add_argument('--episodes', type=int, default=20)
 parser.add_argument('--entropy_weight', type=float, default=1e-5)
 parser.add_argument('--baseline_weight', type=float, default=0.95)
 parser.add_argument('--embedding_size', type=int, default=32)

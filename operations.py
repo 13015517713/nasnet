@@ -105,6 +105,7 @@ class Identity(nn.Module):
   def forward(self, x):
     return x
 
+# h*w减半
 class FactorizedReduce(nn.Module):
 
   def __init__(self, C_in, C_out, affine=True):

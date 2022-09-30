@@ -79,11 +79,12 @@ class PolicyGradient(object):
             logging.info(
                 'arch_epoch {:0>3d} top1_acc {:.4f} top5_avg_acc {:.4f} top20_avg_acc {:.4f} baseline {:.4f} '.format(
                     arch_epoch, top1_acc, top5_avg_acc, top20_avg_acc, self.baseline))
-            for i in range(5):
+            for i in range(min(5, len(workers_top20))):
                 print(workers_top20[i].genotype)
-
+            # cal policy loss
             loss = 0
             for worker in workers:
+                # 可以直接在上面记录并获取
                 actions_p, actions_log_p = self.controller.get_p(worker.actions_index)
 
                 loss += self.cal_loss(actions_p, actions_log_p, worker, self.baseline)
@@ -99,5 +100,5 @@ class PolicyGradient(object):
         policy_loss = -1 * torch.sum(actions_log_p * reward)
         entropy = -1 * torch.sum(actions_p * actions_log_p)
         entropy_bonus = -1 * entropy * self.entropy_weight
-
+    
         return policy_loss + entropy_bonus

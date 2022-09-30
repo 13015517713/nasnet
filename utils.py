@@ -13,7 +13,7 @@ def parse_actions_index(actions_index):
     steps = 4
     normal = []
     reduce = []
-    normal_concat = set(range(2,6))
+    normal_concat = set(range(2,6)) 
     reduce_concat = set(range(2,6))
 
     for i in range(2*steps):
